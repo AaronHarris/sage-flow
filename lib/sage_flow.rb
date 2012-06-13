@@ -4,12 +4,7 @@ module SageFlow
   end
   
   module ClassMethods
-    def class_method
-      'Hello from Class Method'
+    def has_sage_flow_states
     end
-  end
-  
-  def test_method
-    "Hello World"
   end
 end

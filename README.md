@@ -1,7 +1,6 @@
 sage-flow
 =========
 
-
     rvm install 1.9.3
     rvm use 1.9.3
     rvm gemset create sage-flow
