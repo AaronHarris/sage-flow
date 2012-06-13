@@ -8,14 +8,15 @@
   http://www.hathersagegroup.com
 =end
 
-
 module SageFlow
+
   def self.included(base)
     base.extend(ClassMethods)
   end
   
   module ClassMethods
     def has_sage_flow_states
+      validates_presence_of :sage_flow_state
     end
   end
 end
