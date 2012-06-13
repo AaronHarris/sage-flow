@@ -10,4 +10,5 @@ end
 
 class FakeModel
   include ActiveModel::Validations
+  include SageFlow
 end

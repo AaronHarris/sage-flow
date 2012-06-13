@@ -4,7 +4,6 @@ describe "31170407 has_sage_flow_states adds validator to test for presence of s
   it "Throws exception when field is not defined at all" do
     expect do
       class Foo < FakeModel
-        include SageFlow
         has_sage_flow_states
       end
       Foo.new.valid?
@@ -12,7 +11,6 @@ describe "31170407 has_sage_flow_states adds validator to test for presence of s
   end
   it "Is invalid when there is no value" do
     class Foo < FakeModel
-      include SageFlow
       attr_accessor :sage_flow_state
       has_sage_flow_states
     end
@@ -20,7 +18,6 @@ describe "31170407 has_sage_flow_states adds validator to test for presence of s
   end
   it "is valid when has a value" do
     class Foo < FakeModel
-      include SageFlow
       attr_accessor :sage_flow_state
       has_sage_flow_states
     end

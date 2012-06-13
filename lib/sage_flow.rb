@@ -15,7 +15,7 @@ module SageFlow
   end
   
   module ClassMethods
-    def has_sage_flow_states
+    def has_sage_flow_states(*states)
       validates_presence_of :sage_flow_state
     end
   end
