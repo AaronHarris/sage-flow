@@ -1,6 +1,6 @@
 require 'bundler/setup'
 
-require 'sage/flow'
+require 'sage_flow'
 
 RSpec.configure do |config|
   # some (optional) config here

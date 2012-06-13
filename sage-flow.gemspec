@@ -2,16 +2,16 @@
 
 $LOAD_PATH << 'lib'
 
-require 'sage/flow/version'
+require 'sage_flow/version'
 
 Gem::Specification.new do |s|
   s.name          = 'sage-flow'
-  s.version       = Sage::Flow::VERSION
+  s.version       = SageFlow::VERSION
   s.author        = 'Francis Potter'
   s.email         = 'francis@hathersagegroup.com'
   s.summary       = 'Workflow system for Rails.'
   s.description   = %q{
-    Sage::Flow adds standard workflow properties to Rails.
+    SageFlow adds standard workflow properties to Rails.
   }
   s.homepage      = 'https://github.com/hathersagegroup/sage-flow'
   
