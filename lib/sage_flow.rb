@@ -19,7 +19,7 @@ module SageFlow
       raise "All states must be symbols" if states.any?{|s|!s.kind_of?(Symbol)}
       raise "All states must be unique" if states.uniq!
       validates_presence_of :sage_flow_state
-      validates_inclusion_of :sage_flow_state, :in => states.map(&:to_s), :message => "%s is not one of the sage_flow_states"
+      validates_inclusion_of :sage_flow_state, :in => states.map(&:to_s), :message => "State for #{name.demodulize} is %{value}; should be one of: #{states.join(', ')}"
       
       states.each do |state|
         define_method "is_#{state.to_s}?" do
