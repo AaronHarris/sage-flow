@@ -1,6 +1,9 @@
 require "spec_helper"
 
 describe "31170585 has_flow_states requires states be unique" do
+  after(:each) do
+    Object.send(:remove_const, :Foo)
+  end
   it "Does not raise exception if all states unique" do
     expect do
       class Foo < FakeModel

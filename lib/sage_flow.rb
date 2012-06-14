@@ -20,6 +20,12 @@ module SageFlow
       raise "All states must be unique" if states.uniq!
       validates_presence_of :sage_flow_state
       validates_inclusion_of :sage_flow_state, :in => states.map(&:to_s), :message => "%s is not one of the sage_flow_states"
+      
+      states.each do |state|
+        define_method "is_#{state.to_s}?" do
+          sage_flow_state.to_s == state.to_s
+        end
+      end
     end
   end
 end

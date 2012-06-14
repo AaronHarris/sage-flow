@@ -1,10 +1,13 @@
 require 'spec_helper'
 
 describe "31170407 has_sage_flow_states adds validator to test for presence of sage_flow_state field" do
+  after(:each) do
+    Object.send(:remove_const, :Foo)
+  end
   it "Throws exception when field is not defined at all" do
     expect do
       class Foo < FakeModel
-        has_sage_flow_states
+        has_sage_flow_states :bar
       end
       Foo.new.valid?
     end.to raise_error
@@ -19,7 +22,7 @@ describe "31170407 has_sage_flow_states adds validator to test for presence of s
   it "is valid when has a value" do
     class Foo < FakeModel
       attr_accessor :sage_flow_state
-      has_sage_flow_states
+      has_sage_flow_states :bar
     end
     f = Foo.new
     f.sage_flow_state = "bar"
