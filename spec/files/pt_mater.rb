@@ -41,7 +41,9 @@ f.close
 
 p @story
 
-File.open("../#{@story[:id]}_#{@story[:name].split(' ').join('_')}_spec.rb", "w") do |file|
+filename = @story[:name].gsub(/(the|it's|its|now|')/i, "").split(" ").map(&:strip).reject(&:empty?)
+
+File.open("../#{@story[:id]}_#{filename.join('_')}_spec.rb", "w") do |file|
 	file.puts "require 'spec_helper'"
 	file.puts
 	file.puts "describe \"#{@story[:id]} #{@story[:name]}\" do"
@@ -64,4 +66,4 @@ puts "Ready to work on #{@story[:id]}_#{@story[:name].split(' ').join('_')}_spec
 if !@story[:description].empty?
 	puts "Note description: #{@story[:description]}" 
 end
-puts "Git Commit Message: #{@story[:id]} #{@story[:name]}"
+puts "Git Commit Message: #{@story[:id]} #{filename.join(' ')}"
