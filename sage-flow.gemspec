@@ -24,4 +24,8 @@ Gem::Specification.new do |s|
   
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec', '~> 2.0'
+  s.add_development_dependency 'pg'
+  s.add_development_dependency 'sqlite3'
+  
+  
 end
