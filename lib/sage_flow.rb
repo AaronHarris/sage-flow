@@ -26,6 +26,10 @@ module SageFlow
           sage_flow_state.to_s == state.to_s
         end
       end
+
+      after_initialize do
+        self.sage_flow_state = states[0].to_s if !self.sage_flow_state
+      end
     end
   end
 end

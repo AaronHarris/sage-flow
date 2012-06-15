@@ -2,13 +2,10 @@ require 'spec_helper'
 
 describe "31171525 has_sage_flow_state adds is_saved? is_editable? is in that state" do
   before(:each) do
-    class Foo < FakeModel
+    class Foo < Sample
       attr_accessor :sage_flow_state
       has_sage_flow_states :foo, :zing
     end
-  end
-  after(:each) do
-    Object.send(:remove_const, :Foo)
   end
   it "Has a method for the first state" do
     Foo.method_defined?(:is_foo?).should be_true

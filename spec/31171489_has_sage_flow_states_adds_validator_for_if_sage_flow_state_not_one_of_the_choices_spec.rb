@@ -1,11 +1,8 @@
 require 'spec_helper'
 
 describe "31171489 has_sage_flow_states adds validator for if sage_flow_state not one of the choices" do
-  after(:each) do
-    Object.send(:remove_const, :Foo)
-  end
   it "Is invalid when sage_flow_state is not one of the states" do
-    class Foo < FakeModel
+    class Foo < Sample
       attr_accessor :sage_flow_state
       has_sage_flow_states :foo, :bar
     end
@@ -14,7 +11,7 @@ describe "31171489 has_sage_flow_states adds validator for if sage_flow_state no
     f.valid?.should be_false
   end
   it "Is valid when sage_flow_state is one of the proper states" do
-    class Foo < FakeModel
+    class Foo < Sample
       attr_accessor :sage_flow_state
       has_sage_flow_states :foo, :bar
     end

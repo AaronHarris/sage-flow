@@ -14,6 +14,8 @@ class SampleMigration < ActiveRecord::Migration
 end
 
 class Sample < ActiveRecord::Base
+  include ActiveModel::Validations
+  include SageFlow
 end
 
 RSpec.configure do |config|
@@ -25,14 +27,8 @@ RSpec.configure do |config|
   config.after(:suite) do
     migration.down
   end
+  config.after(:each) do
+    Object.send(:remove_const, :Foo) if Object.const_defined?("Foo")
+  end
   # some (optional) config here
 end
-
-
-
-
-class FakeModel
-  include ActiveModel::Validations
-  include SageFlow
-end
-

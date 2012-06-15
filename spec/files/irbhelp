@@ -1,0 +1,15 @@
+require 'rspec'
+require 'active_model'
+require 'sage_flow'
+class FakeModel
+  include ActiveModel::Validations
+  include SageFlow
+end
+class Foo < FakeModel
+  attr_accessor :sage_flow_state
+  has_sage_flow_states :foo, :bar
+end
+f = Foo.new
+f.sage_flow_state = "zing"
+f.valid?
+f.errors.messages.values.first.first
