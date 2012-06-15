@@ -37,5 +37,8 @@ module SageFlow
         self.sage_flow_state = states[0].to_s if !self.sage_flow_state
       end
     end
+
+    def has_sage_flow_transitions
+    end
   end
 end

@@ -43,7 +43,6 @@ File.open("../#{@story[:id]}_#{filename.join('_')}_spec.rb", "w") do |file|
 	file.puts "describe \"#{@story[:id]} #{@story[:name]}\" do"
 	file.puts "  before(:each) do"
 	file.puts "    class Foo < Sample"
-	file.puts "      attr_accessor :sage_flow_state"
     file.puts "      has_sage_flow_states :foo, :bar"
 	file.puts "    end"
 	file.puts "  end"
