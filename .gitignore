@@ -15,8 +15,6 @@ test/version_tmp
 tmp
 *.sublime-project
 *.sublime-workspace
-spec/files/pt_mater.rb
-spec/files/pt_mater.sh
 
 # YARD artifacts
 .yardoc
