@@ -18,8 +18,12 @@ module SageFlow
     def has_sage_flow_states(*states)
       raise "All states must be symbols" if states.any?{|s|!s.kind_of?(Symbol)}
       raise "All states must be unique" if states.uniq!
-      validates_presence_of :sage_flow_state
-      validates_inclusion_of :sage_flow_state, :in => states.map(&:to_s), :message => "State for #{name.demodulize} is %{value}; should be one of: #{states.join(', ')}"
+      if !@sage_flow_states
+        validates_inclusion_of :sage_flow_state, :in => @sage_flow_states.map(&:to_s), :message => "State for #{name.demodulize} is %{value}; should be one of: #{@sage_flow_states.join(', ')}"
+        @sage_flow_states = []
+      end
+      @sage_flow_states += states
+      
       
       states.each do |state|
         define_method "is_#{state.to_s}?" do
@@ -38,7 +42,7 @@ module SageFlow
       end
     end
 
-    def has_sage_flow_transitions
+    def has_sage_flow_transitions(*state_transitions)
     end
   end
 end
