@@ -6,6 +6,7 @@ class SampleMigration < ActiveRecord::Migration
   def up
     create_table :samples do |t|
       t.string :name
+      t.string :sage_flow_state
     end
   end
   def down

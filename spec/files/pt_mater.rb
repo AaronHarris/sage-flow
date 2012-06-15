@@ -1,8 +1,5 @@
 #!/usr/bin/ruby
-
 require 'rubygems'
-# require 'activeresource'
-require 'hpricot'
 require 'net/http'
 require 'nokogiri'
 require 'uri'
@@ -12,7 +9,6 @@ require 'uri'
 user_tokens = {'aaronharris' => '188f901073b501960bcbf3f5ef756c43'}
 if user_tokens.include? ENV['USER']
 	$TOKEN = user_tokens[ENV['USER']]
-	puts "hi #{$TOKEN}"
 else
 	print 'Your name is not in our database. Please visit https://www.pivotaltracker.com/profile, copy the API token, and paste it here:'
 	$TOKEN = gets.strip
@@ -39,9 +35,7 @@ f.close
     :description	=> @doc.css('description').children
 }
 
-p @story
-
-filename = @story[:name].gsub(/(the|it's|its|now|')/i, "").split(" ").map(&:strip).reject(&:empty?)
+filename = @story[:name].gsub(/(the |it's|its|now |a |an |of )/i, "").split(" ").map(&:strip).reject(&:empty?)
 
 File.open("../#{@story[:id]}_#{filename.join('_')}_spec.rb", "w") do |file|
 	file.puts "require 'spec_helper'"
@@ -59,8 +53,8 @@ File.open("../#{@story[:id]}_#{filename.join('_')}_spec.rb", "w") do |file|
 	file.puts "end"
 end
 
-puts "Ready to work on #{@story[:id]}_#{@story[:name].split(' ').join('_')}_spec.rb"
 if !@story[:description].empty?
 	puts "Note description: #{@story[:description]}" 
 end
+puts "rspec spec/#{@story[:id]}_#{filename.join('_')}_spec.rb"
 puts "Git Commit Message: #{@story[:id]} #{filename.join(' ')}"

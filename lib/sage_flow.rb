@@ -25,6 +25,12 @@ module SageFlow
         define_method "is_#{state.to_s}?" do
           sage_flow_state.to_s == state.to_s
         end
+
+        # self.instance_eval do
+        #   define_method "all_#{state}" do
+        #     where(:sage_flow_state => state.to_s)
+        #   end
+        # end
       end
 
       after_initialize do

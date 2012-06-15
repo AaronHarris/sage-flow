@@ -3,7 +3,6 @@ require 'spec_helper'
 describe "31171525 has_sage_flow_state adds is_saved? is_editable? is in that state" do
   before(:each) do
     class Foo < Sample
-      attr_accessor :sage_flow_state
       has_sage_flow_states :foo, :zing
     end
   end
