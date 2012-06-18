@@ -7,10 +7,14 @@ describe "31178771 has_sage_flow_states add class method to find all the objects
     end
   end
   it "has the class method all_zing" do
-    Foo.method_defined?(:all_zing).should be_true
+    Foo.methods.include?(:all_zing).should be_true
   end
   it "has the class method all_bar" do
-    Foo.method_defined?(:all_bar).should be_true
+    pp Foo.methods.sort
+    Foo.methods.include?(:all_bar).should be_true
+  end
+  it "does not have class method for state it doesn't have" do
+    Foo.methods.include?(:all_foo).should be_false
   end
   it "correctly retrieves all_foo" do
     obj = []
