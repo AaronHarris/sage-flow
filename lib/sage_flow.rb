@@ -16,7 +16,8 @@ module SageFlow
   
   module ClassMethods
     def has_sage_flow_states(*states)
-      raise "All states must be symbols" if states.any?{|s|!s.kind_of?(Symbol)}
+      raise "No states specified" if states == []
+      raise "All states must be symbols" if states.flatten!.any?{|s|!s.kind_of?(Symbol)}
       raise "All states must be unique" if states.uniq!
       if !@sage_flow_states
         @sage_flow_states = []
