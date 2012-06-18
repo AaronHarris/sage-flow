@@ -1,5 +1,6 @@
 require 'bundler/setup'
 require 'active_record'
+require 'database_cleaner'
 require 'sage_flow'
 
 class SampleMigration < ActiveRecord::Migration
@@ -20,16 +21,21 @@ class Sample < ActiveRecord::Base
 end
 
 RSpec.configure do |config|
+  # config.use_transactional_fixtures = true
   migration = SampleMigration.new
   config.before(:suite) do
     ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => 'db/test.db')
     migration.up
+    DatabaseCleaner.strategy = :transaction
   end
   config.after(:suite) do
     migration.down
   end
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
   config.after(:each) do
+    DatabaseCleaner.clean
     Object.send(:remove_const, :Foo) if Object.const_defined?("Foo")
   end
-  # some (optional) config here
 end

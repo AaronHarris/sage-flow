@@ -43,6 +43,10 @@ module SageFlow
         define_singleton_method "all_#{state}" do
           where(:sage_flow_state => state.to_s)
         end
+
+        define_singleton_method "all_not_#{state}" do
+          where(['sage_flow_state <> ?', state.to_s])
+        end
       end
 
       after_initialize do
