@@ -38,6 +38,7 @@ describe "31249039 If has_sage_flow_states is called more than once, the states 
     end
     after(:each) do
       Object.send(:remove_const, :SubSubFoo) if Object.const_defined?("SubSubFoo")
+      Object.send(:remove_const, :SubSubSubFoo) if Object.const_defined?("SubSubSubFoo")
     end
     it "does something" do
       true.should be_true
