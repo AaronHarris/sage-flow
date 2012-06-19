@@ -36,6 +36,9 @@ describe "31249039 If has_sage_flow_states is called more than once, the states 
         has_sage_flow_states :zing
       end
     end
+    after(:each) do
+      Object.send(:remove_const, :SubSubFoo) if Object.const_defined?("SubSubFoo")
+    end
     it "does something" do
       true.should be_true
     end
@@ -69,6 +72,15 @@ describe "31249039 If has_sage_flow_states is called more than once, the states 
       s = SubFoo.new
       s.sage_flow_state = "zing"
       s.should be_valid
+    end
+    it "Works on an insane level of subclasses" do
+      class SubSubFoo < SubFoo
+        has_sage_flow_states :snap, :crackle, :pop
+      end
+      class SubSubSubFoo < SubSubFoo
+        has_sage_flow_states :hello, :goodbye
+      end
+      SubSubSubFoo.sage_flow_states.should == [:foo, :bar, :zing, :snap, :crackle, :pop, :hello, :goodbye]
     end
   end
 end
