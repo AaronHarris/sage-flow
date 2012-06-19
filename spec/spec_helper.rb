@@ -37,5 +37,6 @@ RSpec.configure do |config|
   config.after(:each) do
     DatabaseCleaner.clean
     Object.send(:remove_const, :Foo) if Object.const_defined?("Foo")
+    Object.send(:remove_const, :SubFoo) if Object.const_defined?("SubFoo")
   end
 end

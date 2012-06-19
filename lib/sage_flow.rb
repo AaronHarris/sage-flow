@@ -33,7 +33,12 @@ module SageFlow
         validate :validate_sage_flow_state
       end
       @sage_flow_states += states
-      
+
+      if !(self.methods - superclass.methods).include?(:sage_flow_states)
+        define_singleton_method :sage_flow_states do
+          superclass.sage_flow_states + @sage_flow_states
+        end
+      end
       
       states.each do |state|
         define_method "is_#{state.to_s}?" do
