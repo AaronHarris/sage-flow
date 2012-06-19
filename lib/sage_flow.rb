@@ -59,9 +59,23 @@ module SageFlow
       end
     end
 
-    def has_sage_flow_transitions(transitions)
+    def has_sage_flow_transitions(transitions=Hash.new)
+      # Convert &block to Proc
       raise "All transition must be hashes" if (!transitions.kind_of?(Hash) || !transitions.all?{|k,v|v.kind_of?(Hash)})
       raise "All transitions must use preexisting states" if !transitions.values.all?{|v|(v.flatten(2)-sage_flow_states).empty?}
+      if !@sage_flow_transitions
+        @sage_flow_transitions ||= Hash.new
+        define_singleton_method :sage_flow_transitions do
+          @sage_flow_transitions
+        end
+      end
+      @sage_flow_transitions.merge!(transitions)
+
+      if !(self.methods - superclass.methods).include?(:sage_flow_transitions)
+        define_singleton_method :sage_flow_transitions do
+          superclass.sage_flow_transitions.merge(@sage_flow_transitions)
+        end
+      end
     end
   end
 end
