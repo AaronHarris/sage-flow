@@ -18,6 +18,7 @@ tmp
 spec/lib/pt_mater.rb
 spec/lib/pt_mater.sh
 spec/lib/irbhelp
+spec/lib/info.xml
 
 # YARD artifacts
 .yardoc

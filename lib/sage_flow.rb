@@ -77,6 +77,12 @@ module SageFlow
           superclass.sage_flow_transitions.merge(@sage_flow_transitions)
         end
       end
+
+      transitions.each do |name, change|
+        define_method "can_#{name}?" do
+          change.keys.flatten.map(&:to_s).include?(sage_flow_state.to_s)
+        end
+      end
     end
   end
 end
