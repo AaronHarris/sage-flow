@@ -60,6 +60,7 @@ module SageFlow
     end
 
     def has_sage_flow_transitions(*state_transitions)
+      raise "All transitions must be hashes" if state_transitions.any?{|t|!t.kind_of?(Hash)}
     end
   end
 end
