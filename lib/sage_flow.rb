@@ -61,7 +61,7 @@ module SageFlow
 
     def has_sage_flow_transitions(transitions)
       raise "All transition must be hashes" if (!transitions.kind_of?(Hash) || !transitions.all?{|k,v|v.kind_of?(Hash)})
-      raise "All transitions must use preexisting states" if !transitions.values.all?{|v|(v.flatten-sage_flow_states).empty?}
+      raise "All transitions must use preexisting states" if !transitions.values.all?{|v|(v.flatten(2)-sage_flow_states).empty?}
     end
   end
 end

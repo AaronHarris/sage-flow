@@ -17,4 +17,12 @@ describe "31179047 has_sage_flow_transitions throws an exception if the states r
       end
     end.not_to raise_error
   end
+  it "Does not throws an Exception when states is an array" do
+    expect do
+      class Foo < Sample
+        has_sage_flow_states :new, :editable, :saved, :locked
+        has_sage_flow_transitions :edit => {[:new,:locked] => :editable}, :save => {[:new,:editable] => :saved}, :lock => {:saved => [:locked,:saved]}
+      end
+    end.not_to raise_error
+  end
 end
