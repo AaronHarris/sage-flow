@@ -82,6 +82,10 @@ module SageFlow
         define_method "can_#{name}?" do
           change.keys.flatten.map(&:to_s).include?(sage_flow_state.to_s)
         end
+
+        define_method "do_#{name}" do
+          send("sage_flow_state=".to_sym, change[sage_flow_state.to_sym].to_s) if send("can_#{name}?".to_sym)
+        end
       end
     end
   end

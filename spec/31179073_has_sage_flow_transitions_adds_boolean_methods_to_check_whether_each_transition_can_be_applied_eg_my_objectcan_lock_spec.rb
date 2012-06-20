@@ -15,7 +15,7 @@ describe "31179073 has_sage_flow_transitions adds boolean methods to check wheth
     end
   end
   it "Returns true if an object can perform a transition based on its current state" do
-    f = Foo.create(name: "Bob", sage_flow_state: :open)
+    f = Foo.create(name: "Bob", sage_flow_state: "open")
     f.can_save?.should be_true
   end
   it "Returns false if an object cannot perform a transition" do
@@ -27,7 +27,7 @@ describe "31179073 has_sage_flow_transitions adds boolean methods to check wheth
     f.can_edit?.should be_true
   end
   it "Returns true if an object can perform another transition" do
-    f = Foo.create(name: "Bob", sage_flow_state: :open)
+    f = Foo.create(name: "Bob", sage_flow_state: "open")
     f.can_edit?.should be_false
   end
 end

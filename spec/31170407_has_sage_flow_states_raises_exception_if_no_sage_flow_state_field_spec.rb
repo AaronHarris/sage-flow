@@ -36,14 +36,12 @@ describe "31170407 has_sage_flow_states adds validator to test for presence of s
   end
   it "Is invalid when there is no value" do
     class Foo < Sample
-      attr_accessor :sage_flow_state
       has_sage_flow_states
     end
     Foo.new.valid?.should be_false
   end
   it "is valid when has a value" do
     class Foo < Sample
-      attr_accessor :sage_flow_state
       has_sage_flow_states :bar
     end
     f = Foo.new
