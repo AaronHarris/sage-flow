@@ -91,6 +91,12 @@ module SageFlow
           send("save!".to_sym) if send("do_#{name}")
         end
       end
+
+      sage_flow_states.each do |state|
+        define_method "can_be_#{state}?" do
+          transitions.values.map{|c| c.key(state.to_sym)}.compact!.include?(sage_flow_state.to_sym)
+        end
+      end
     end
   end
 end
