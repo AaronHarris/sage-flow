@@ -86,6 +86,10 @@ module SageFlow
         define_method "do_#{name}" do
           send("sage_flow_state=".to_sym, change[sage_flow_state.to_sym].to_s) if send("can_#{name}?".to_sym)
         end
+
+        define_method "do_#{name}!" do
+          send("save!".to_sym) if send("do_#{name}")
+        end
       end
     end
   end
