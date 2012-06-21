@@ -73,7 +73,7 @@ module SageFlow
           @sage_flow_transitions
         end
       end
-      
+      @sage_flow_transitions.merge!(transitions)
 
       if !(self.methods - superclass.methods).include?(:sage_flow_transitions)
         define_singleton_method :sage_flow_transitions do
@@ -81,12 +81,21 @@ module SageFlow
         end
       end
 
-      @transition_procs = Hash.new
-      @transition_procs[name] = block
-      attr_accessor :transition_procs
+      if !@t_procs && block_given?
+        @t_procs ||= Hash.new
+        define_singleton_method :t_procs do
+          @t_procs
+        end
+      end
+
+      if !(self.methods - superclass.methods).include?(:t_procs) && block_given?
+        define_singleton_method :t_procs do
+          superclass.t_procs.merge(@t_procs)
+        end
+      end
 
       transitions.each do |name, change|
-        if karr = change.keys.keep_if{|k| k.kind_of?(Array)}
+        if karr = change.keys.keep_if{|k| k.kind_of?(Array)} 
           karr.each do |arr|
             arr.each do |a|
               change[a] = change[arr]
@@ -99,16 +108,27 @@ module SageFlow
           change.keys.flatten.map(&:to_s).include?(sage_flow_state.to_s)
         end
 
-        define_method "do_#{name}" do
-          send("sage_flow_state=".to_sym, change[sage_flow_state.to_sym].to_s) if send("can_#{name}?".to_sym)
+        if block_given?
+          @t_procs["#{name}_proc".to_sym] = block
+          define_method "do_#{name}" do
+            if send("can_#{name}?".to_sym)
+              if pro = self.class.t_procs["#{name}_proc".to_sym]
+                start_state = sage_flow_state
+                send("sage_flow_state=".to_sym, pro.call.to_s)
+                return [change[start_state.to_sym]].flatten.include?(sage_flow_state) ? sage_flow_state.to_s : nil
+              end
+            end
+          end
+        else
+          define_method "do_#{name}" do
+            send("sage_flow_state=".to_sym, change[sage_flow_state.to_sym].to_s) if send("can_#{name}?".to_sym)
+          end
         end
 
         define_method "do_#{name}!" do
           send("save!".to_sym) if send("do_#{name}")
         end
       end
-
-      @sage_flow_transitions.merge!(transitions)
 
       sage_flow_states.each do |state|
         define_method "can_be_#{state}?" do
