@@ -113,9 +113,13 @@ module SageFlow
           define_method "do_#{name}" do
             if send("can_#{name}?".to_sym)
               if pro = self.class.t_procs["#{name}_proc".to_sym]
-                start_state = sage_flow_state
-                send("sage_flow_state=".to_sym, pro.call.to_s)
-                return [change[start_state.to_sym]].flatten.include?(sage_flow_state) ? sage_flow_state.to_s : nil
+                output_states = [change[sage_flow_state.to_sym]].flatten
+                out_state = pro.call.to_sym
+                if output_states.include?(out_state)
+                  send("sage_flow_state=".to_sym, out_state.to_s)
+                else
+                  raise "#{name} transition block returned: #{out_state}, which is not one of the output states: #{output_states.flatten.join(' ')}"
+                end
               end
             end
           end
