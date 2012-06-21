@@ -8,6 +8,8 @@
   http://www.hathersagegroup.com
 =end
 
+require 'sage_flow/sage_flow_transition'
+
 module SageFlow
 
   def self.included(base)
@@ -59,18 +61,19 @@ module SageFlow
       end
     end
 
-    def has_sage_flow_transitions(transitions=Hash.new)
+    def has_sage_flow_transitions(transitions=Hash.new, &block)
       # Convert &block to Proc
       raise "All transition must be hashes" if (!transitions.kind_of?(Hash) || !transitions.all?{|k,v|v.kind_of?(Hash)})
       raise "All transition names must be symbols" if transitions.any?{|k,v|!k.kind_of?(Symbol)}
-      raise "All transitions must use preexisting states" if !transitions.values.all?{|v|(v.flatten(2)-sage_flow_states).empty?}
+      raise "All transitions must use preexisting states" if !transitions.values.all?{|h|(h.flatten(2)-sage_flow_states).empty?}
+      # raise "All output state arrays must be passed with a block" if !block && transitions.values.any?(|h| h.values.kind_of?(Array))
       if !@sage_flow_transitions
         @sage_flow_transitions ||= Hash.new
         define_singleton_method :sage_flow_transitions do
           @sage_flow_transitions
         end
       end
-      @sage_flow_transitions.merge!(transitions)
+      
 
       if !(self.methods - superclass.methods).include?(:sage_flow_transitions)
         define_singleton_method :sage_flow_transitions do
@@ -78,7 +81,20 @@ module SageFlow
         end
       end
 
+      @transition_procs = Hash.new
+      @transition_procs[name] = block
+      attr_accessor :transition_procs
+
       transitions.each do |name, change|
+        if karr = change.keys.keep_if{|k| k.kind_of?(Array)}
+          karr.each do |arr|
+            arr.each do |a|
+              change[a] = change[arr]
+            end
+            change.delete(arr)
+          end
+        end
+
         define_method "can_#{name}?" do
           change.keys.flatten.map(&:to_s).include?(sage_flow_state.to_s)
         end
@@ -91,6 +107,8 @@ module SageFlow
           send("save!".to_sym) if send("do_#{name}")
         end
       end
+
+      @sage_flow_transitions.merge!(transitions)
 
       sage_flow_states.each do |state|
         define_method "can_be_#{state}?" do
