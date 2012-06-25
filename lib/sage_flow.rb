@@ -108,12 +108,12 @@ module SageFlow
         if block_given?
           @t_procs["#{name}_proc".to_sym] = block
           define_method "do_#{name}" do
-            if send("can_#{name}?".to_sym)
+            if send("can_#{name}?")
               if pro = self.class.t_procs["#{name}_proc".to_sym]
                 output_states = [change[sage_flow_state.to_sym]].flatten
                 out_state = pro.call.to_sym
                 if output_states.include?(out_state)
-                  send("sage_flow_state=".to_sym, out_state.to_s)
+                  send("sage_flow_state=", out_state.to_s)
                 else
                   raise "#{name} transition block returned: #{out_state}, which is not one of the output states: #{output_states.flatten.join(' ')}"
                 end
@@ -122,12 +122,12 @@ module SageFlow
           end
         else
           define_method "do_#{name}" do
-            send("sage_flow_state=".to_sym, change[sage_flow_state.to_sym].to_s) if send("can_#{name}?".to_sym)
+            send("sage_flow_state=", change[sage_flow_state.to_sym].to_s) if send("can_#{name}?")
           end
         end
 
         define_method "do_#{name}!" do
-          send("save!".to_sym) if send("do_#{name}")
+          send("save!") if send("do_#{name}")
         end
       end
 
@@ -137,21 +137,23 @@ module SageFlow
         end
       end
     end
+
     def handles_sage_flow_state_for(model)
       raise "Class #{model.class} does not inherit ActiveRecord::Base" if !(model < ActiveRecord::Base)
       define_method "sage_flow_state" do |id|
         state = model.find(id).sage_flow_state.downcase
-        # respond_to do |format|
-        #   format.text { render text: state }
-        # end
-        state
+        render text: state
       end
 
       model.sage_flow_transitions.each do |name, change|
         define_method "perform_#{name}" do |id|
           o = model.find(id)
-          o.send("do_#{name}!") if o.send("can_#{name}?".to_sym)
-          # redirect_to o
+          if o.send("can_#{name}?")
+            o.send("do_#{name}!") 
+            redirect_to o, notice: "#{o.class} object is now #{o.sage_flow_state}"
+          else
+            redirect_to o, notice: "#{o.class} object of id: #{o.id} cannot perform #{name} transition from state \'#{o.sage_flow_state}\'"
+          end
         end
       end
     end

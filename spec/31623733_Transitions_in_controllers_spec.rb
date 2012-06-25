@@ -22,6 +22,7 @@ describe "31623733 Transitions in controllers" do
     id = f.id
     f = nil
     fc = FooController.new
+    fc.stub(:redirect_to).and_return(200)
     fc.perform_edit(id)
     Foo.find(id).sage_flow_state.should == "open"
   end
@@ -30,6 +31,7 @@ describe "31623733 Transitions in controllers" do
     id = f.id
     f = nil
     fc = FooController.new
+    fc.stub(:redirect_to).and_return(200)
     fc.perform_lock(id)
     Foo.find(id).sage_flow_state.should == "new"
   end

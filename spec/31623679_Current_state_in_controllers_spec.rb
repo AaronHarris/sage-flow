@@ -33,6 +33,7 @@ describe "31623679 Current state in controllers" do
       id = f.id
       f = nil
       fc = FooController.new
+      fc.stub(:render).and_return(Foo.find(id).sage_flow_state.downcase)
       fc.sage_flow_state(id).should == "new"
     end
   end
