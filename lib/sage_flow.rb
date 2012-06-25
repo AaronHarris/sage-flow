@@ -8,8 +8,6 @@
   http://www.hathersagegroup.com
 =end
 
-require 'sage_flow/sage_flow_transition'
-
 module SageFlow
 
   def self.included(base)
@@ -62,11 +60,10 @@ module SageFlow
     end
 
     def has_sage_flow_transitions(transitions=Hash.new, &block)
-      # Convert &block to Proc
       raise "All transition must be hashes" if (!transitions.kind_of?(Hash) || !transitions.all?{|k,v|v.kind_of?(Hash)})
       raise "All transition names must be symbols" if transitions.any?{|k,v|!k.kind_of?(Symbol)}
       raise "All transitions must use preexisting states" if !transitions.values.all?{|h|(h.flatten(2)-sage_flow_states).empty?}
-      # raise "All output state arrays must be passed with a block" if !block && transitions.values.any?(|h| h.values.kind_of?(Array))
+      raise "All output state arrays must be passed with a block" if !block_given? && transitions.values.any?{|h| h.values.any?{|o| o.kind_of?(Array)}}
       if !@sage_flow_transitions
         @sage_flow_transitions ||= Hash.new
         define_singleton_method :sage_flow_transitions do
@@ -137,6 +134,24 @@ module SageFlow
       sage_flow_states.each do |state|
         define_method "can_be_#{state}?" do
           transitions.values.map{|c| c.key(state.to_sym)}.compact!.include?(sage_flow_state.to_sym)
+        end
+      end
+    end
+    def handles_sage_flow_state_for(model)
+      raise "Class #{model.class} does not inherit ActiveRecord::Base" if !(model < ActiveRecord::Base)
+      define_method "sage_flow_state" do |id|
+        state = model.find(id).sage_flow_state.downcase
+        # respond_to do |format|
+        #   format.text { render text: state }
+        # end
+        state
+      end
+
+      model.sage_flow_transitions.each do |name, change|
+        define_method "perform_#{name}" do |id|
+          o = model.find(id)
+          o.send("do_#{name}!") if o.send("can_#{name}?".to_sym)
+          # redirect_to o
         end
       end
     end

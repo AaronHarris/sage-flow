@@ -36,4 +36,11 @@ describe "31292597 has_sage_flow_transitions takes an array as output" do
     expect{f.do_lock}.to raise_error
     f.sage_flow_state.should == "saved"
   end
+  it "Raises an error if has_sage_flow_transitions is given an array as output but no block is supplied" do
+    expect do
+      class Foo
+        has_sage_flow_transitions lock: {saved: [:locked, :invalid]} 
+      end
+    end.to raise_error
+  end
 end
