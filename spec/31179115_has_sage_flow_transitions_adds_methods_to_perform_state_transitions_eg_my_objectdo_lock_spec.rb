@@ -48,4 +48,10 @@ describe "31179115 has_sage_flow_transitions adds methods to perform state trans
     g = Foo.find(thisid)
     g.sage_flow_state.to_s.should == "open"
   end
+  it "Changes a \'open\' object to \'locked\' by calling do_save and do_lock" do
+    f = Foo.create(name: "Jack", sage_flow_state: "open")
+    f.do_save
+    f.do_lock
+    f.sage_flow_state.to_s.should == "locked"
+  end
 end

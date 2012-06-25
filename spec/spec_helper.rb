@@ -1,5 +1,7 @@
 require 'bundler/setup'
 require 'active_record'
+require 'action_controller'
+require 'action_dispatch'
 require 'database_cleaner'
 require 'sage_flow'
 
@@ -16,7 +18,10 @@ class SampleMigration < ActiveRecord::Migration
 end
 
 class Sample < ActiveRecord::Base
-  include ActiveModel::Validations
+  include SageFlow
+end
+
+class SampleController < ActionController::Base
   include SageFlow
 end
 
@@ -38,5 +43,6 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
     Object.send(:remove_const, :Foo) if Object.const_defined?("Foo")
     Object.send(:remove_const, :SubFoo) if Object.const_defined?("SubFoo")
+    Object.send(:remove_const, :FooController) if Object.const_defined?("FooController")
   end
 end
