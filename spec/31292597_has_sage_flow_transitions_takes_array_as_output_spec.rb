@@ -15,7 +15,6 @@ describe "31292597 has_sage_flow_transitions takes an array as output" do
   it "Runs the proc whenever calling a transition that has a proc" do
     f = Foo.create
     f.sage_flow_state = "saved"
-    output = double('output')
     f.do_lock
     f.sage_flow_state.should == "invalid"
   end

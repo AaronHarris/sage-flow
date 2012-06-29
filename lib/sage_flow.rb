@@ -111,7 +111,7 @@ module SageFlow
             if send("can_#{name}?")
               if pro = self.class.t_procs["#{name}_proc".to_sym]
                 output_states = [change[sage_flow_state.to_sym]].flatten
-                out_state = pro.call.to_sym
+                out_state = pro.call(sage_flow_state).to_sym
                 if output_states.include?(out_state)
                   send("sage_flow_state=", out_state.to_s)
                 else
@@ -140,19 +140,37 @@ module SageFlow
 
     def handles_sage_flow_state_for(model)
       raise "Class #{model.class} does not inherit ActiveRecord::Base" if !(model < ActiveRecord::Base)
-      define_method "sage_flow_state" do |id|
-        state = model.find(id).sage_flow_state.downcase
+      define_method "sage_flow_state" do |id=nil|
+        state = id ? model.find(id).sage_flow_state.downcase : model.find(params[:id]).sage_flow_state.downcase
         render text: state
       end
 
+      define_method "sage_flow_state_poller" do |id=nil|
+        o = id ? model.find(id) : model.find(params[:id])
+        #need to pluralize from ActiveSupport
+        statejs = 
+"$(function(){
+  var #{o.class.name.downcase}_interval_#{o.id} = setInterval(function(){
+    $.get('/#{o.class.name.downcase.pluralize}/#{o.id}/sage_flow_state.txt',function(state){
+      if (state != '#{o.sage_flow_state}'}) {
+        clearInterval(#{o.class.name.downcase}_interval_#{o.id});
+        location.reload();
+      }
+    })
+  }, 1000);
+})"
+        render js: statejs
+        statejs
+      end
+
       model.sage_flow_transitions.each do |name, change|
-        define_method "perform_#{name}" do |id|
-          o = model.find(id)
+        define_method "perform_#{name}" do |id=nil|
+          o = id ? model.find(id) : model.find(params[:id])
           if o.send("can_#{name}?")
             o.send("do_#{name}!") 
             redirect_to o, notice: "#{o.class} object is now #{o.sage_flow_state}"
           else
-            redirect_to o, notice: "#{o.class} object of id: #{o.id} cannot perform #{name} transition from state \'#{o.sage_flow_state}\'"
+            redirect_to o, alert: "#{o.class} object of id: #{o.id} cannot perform #{name} transition from state \'#{o.sage_flow_state}\'"
           end
         end
       end
