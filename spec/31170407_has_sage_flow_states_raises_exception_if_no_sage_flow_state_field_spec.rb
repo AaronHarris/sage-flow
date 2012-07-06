@@ -7,6 +7,7 @@ describe "31170407 has_sage_flow_states adds validator to test for presence of s
         def up
           create_table :stateless_samples do |t|
             t.string :name
+            t.string :type
           end
         end
         def down
@@ -25,12 +26,11 @@ describe "31170407 has_sage_flow_states adds validator to test for presence of s
       StatelessSampleMigration.new.down
     end
     it "Throws exception when field is not defined at all" do
-      
       expect do
-        class Foo < StatelessSample
+        class StatelessFoo < StatelessSample
           has_sage_flow_states :bar
         end
-        Foo.new.valid?
+        StatelessFoo.new.valid?
       end.to raise_error
     end
   end

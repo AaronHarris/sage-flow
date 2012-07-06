@@ -21,7 +21,7 @@ describe "31178831 has_sage_flow_states adds class method to find all the object
       f.sage_flow_state = "bar"
       obj << f
       f.save!
-      Foo.all_not_zing.should == obj
+      Foo.all_not_zing.map{|o| [o.id, o.name, o.sage_flow_state, o.type]}.should == obj.map{|o| [o.id, o.name, o.sage_flow_state, o.type]}
     end
   end
   describe "For state bar, not the default" do
@@ -40,7 +40,7 @@ describe "31178831 has_sage_flow_states adds class method to find all the object
       f.sage_flow_state = "zing"
       obj << f
       f.save!
-      Foo.all_not_bar.should == obj
+      Foo.all_not_bar.map{|o| [o.id, o.name, o.sage_flow_state, o.type]}.should == obj.map{|o| [o.id, o.name, o.sage_flow_state, o.type]}
     end
   end
 end

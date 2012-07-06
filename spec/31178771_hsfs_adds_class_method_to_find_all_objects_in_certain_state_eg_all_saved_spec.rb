@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "31178771 has_sage_flow_states add class method to find all the objects in a certain state (assumes ActiveRecord), e.g. MyClass.all_saved" do
   before(:each) do
     class Foo < Sample
-      has_sage_flow_states [:zing, :bar]
+      has_sage_flow_states :zing, :bar
     end
   end
   it "has the class method all_zing" do
@@ -24,6 +24,6 @@ describe "31178771 has_sage_flow_states add class method to find all the objects
     f = Foo.create(name: "Jim")
     f.sage_flow_state = "bar"
     f.save!
-    Foo.all_zing.should == obj 
+    Foo.all_zing.should == obj
   end
 end

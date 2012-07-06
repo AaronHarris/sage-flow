@@ -10,6 +10,7 @@ class SampleMigration < ActiveRecord::Migration
     create_table :samples do |t|
       t.string :name
       t.string :sage_flow_state
+      t.string :type
     end
   end
   def down
@@ -46,9 +47,10 @@ RSpec.configure do |config|
     DatabaseCleaner.start
   end
   config.after(:each) do
-    DatabaseCleaner.clean
     Object.send(:remove_const, :Foo) if Object.const_defined?("Foo")
     Object.send(:remove_const, :SubFoo) if Object.const_defined?("SubFoo")
+    Object.send(:remove_const, :SubSubFoo) if Object.const_defined?("SubSubFoo")
     Object.send(:remove_const, :FooController) if Object.const_defined?("FooController")
+    DatabaseCleaner.clean
   end
 end
