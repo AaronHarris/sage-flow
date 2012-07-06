@@ -45,7 +45,10 @@ module SageFlow
         define_singleton_method :display_states do
           Hash[sage_flow_states_info.map{|s,o| o[:display] ? [s,o[:display]] : [s,s.to_s.titleize]}]
         end
-        define_singleton_method :badge_colors do BOOTSTRAP_BADGES; end
+        define_singleton_method :badge_colors do
+          BOOTSTRAP_BADGES.default=("default")
+          BOOTSTRAP_BADGES
+        end
         define_singleton_method :sage_flow_badges do
           Hash[sage_flow_states_info.map{|s,o| o[:badge] ? [s,o[:badge]] : o[:color] ? [s, badge_colors[o[:color]]] : [s, "default"]}]
         end
@@ -60,6 +63,12 @@ module SageFlow
         validate :validate_sage_flow_state
         define_method :display_state do
           self.class.sage_flow_states_info[sage_flow_state.to_sym][:display]
+        end
+        define_method :sage_flow_badge do
+          self.class.sage_flow_badges[sage_flow_state.to_sym]
+        end
+        define_method :sage_flow_color do
+          self.class.sage_flow_colors[sage_flow_state.to_sym]
         end
       end
       
