@@ -15,6 +15,8 @@ module SageFlow
   end
   
   module ClassMethods
+    BOOTSTRAP_BADGES ||= {"gray"=>"default", "green"=>"success", "orange"=>"warning", "red"=>"important", "blue"=>"info", "black"=>"inverse"}
+
     def sage_flow_fix_hash!(hash)
       if arrs = hash.keys.select{|k| k.kind_of?(Array)} 
         arrs.each do |arr|
@@ -42,6 +44,13 @@ module SageFlow
         end
         define_singleton_method :display_states do
           Hash[sage_flow_states_info.map{|s,o| o[:display] ? [s,o[:display]] : [s,s.to_s.titleize]}]
+        end
+        define_singleton_method :badge_colors do BOOTSTRAP_BADGES; end
+        define_singleton_method :sage_flow_badges do
+          Hash[sage_flow_states_info.map{|s,o| o[:badge] ? [s,o[:badge]] : o[:color] ? [s, badge_colors[o[:color]]] : [s, "default"]}]
+        end
+        define_singleton_method :sage_flow_colors do
+          Hash[sage_flow_states_info.map{|s,o| o[:color] ? [s,o[:color]] : o[:badge] ? [s, badge_colors.key(o[:badge])] : [s, "gray"]}]
         end
         define_method :validate_sage_flow_state do
           if !self.class.sage_flow_states.map(&:to_s).include?(sage_flow_state)
@@ -79,7 +88,6 @@ module SageFlow
       after_initialize do
         self.sage_flow_state = states.keys.first.to_s unless self.sage_flow_state
       end
-      @@badge_colors ||= {"gray"=>"", "green"=>"success", "orange"=>"warning", "red"=>"important", "blue"=>"info", "black"=>"inverse"}
     end
 
     def has_sage_flow_transitions(transitions=Hash.new, &block)
