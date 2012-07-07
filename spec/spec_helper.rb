@@ -23,12 +23,6 @@ class Sample < ActiveRecord::Base
 end
 
 class SampleController
-  # include ActionController::Rendering
-  # include ActionController::MimeResponds
-  # include ActionDispatch::Http
-  # include ActionController::UrlFor
-  # include ActionController::Testing
-  # include ActionController::Compatibility
   include SageFlow
 end
 
